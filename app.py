@@ -4,14 +4,15 @@ import google.generativeai as genai
 st.set_page_config(page_title="Trợ lý AI - Lina", page_icon="🤖")
 st.title("🤖 Trợ lý AI - Lina - Vi Tính Tấn Dân")
 
-# Lấy API Key từ Streamlit Secrets hoặc ô nhập bên dưới
-api_key = st.secrets.get("GEMINI_API_KEY", "")
+# Lấy API Key từ thanh bên trái
+api_key = st.sidebar.text_input("Nhập Google Gemini API Key:", type="password")
+if not api_key:
+    api_key = st.secrets.get("GEMINI_API_KEY", "")
 
 if not api_key:
-    api_key = st.sidebar.text_input("Nhập Google Gemini API Key:", type="password")
-    st.sidebar.info("💡 Thầy có thể lấy API Key miễn phí tại [Google AI Studio](https://aistudio.google.com/)")
-
-if api_key:
+    st.warning("⚠️ Thầy vui lòng nhập Gemini API Key ở thanh bên trái để bắt đầu trò chuyện với Lina nhé!")
+    st.info("💡 Thầy có thể lấy API Key miễn phí tại [Google AI Studio](https://aistudio.google.com/)")
+else:
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel('gemini-1.5-flash')
 
@@ -35,5 +36,3 @@ if api_key:
                     st.markdown(response.text)
                 except Exception as e:
                     st.error(f"Đã xảy ra lỗi: {e}")
-else:
-    st.warning("⚠️ Thầy vui lòng nhập Gemini API Key ở thanh bên trái để bắt đầu trò chuyện với Lina nhé!")
